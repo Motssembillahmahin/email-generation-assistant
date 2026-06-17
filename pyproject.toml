@@ -31,6 +31,9 @@ target-version = "py311"
 [tool.ruff.lint]
 # pycodestyle, pyflakes, isort, pyupgrade, flake8-bugbear, flake8-simplify
 select = ["E", "F", "I", "UP", "B", "SIM"]
+# Line width is governed by the formatter; prompt string literals contain
+# intentionally long prose lines that should not be hard-wrapped.
+ignore = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
