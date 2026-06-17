@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+
+# uv / virtualenv
+.venv/
+
+# Secrets
+.env
+
+# Editors
+.idea/
+.vscode/
+
+
+# Assessment brief — do not publish the company's internal document
+AI Engineer Candidate Assessment_ Email Generation Assistant.pdf
