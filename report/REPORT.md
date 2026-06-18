@@ -247,6 +247,7 @@ incomplete, or slightly altered), or **none** (0.0 — absent or contradicted). 
 score = mean over facts; the metric is the mean across both judges. The 3-level scale makes
 the metric sensitive to subtle distortions (a changed number/date), not just outright
 omissions — the highest-priority requirement in the prompt's Priority Order.
+*Example:* 3 facts, a judge marks 2 full + 1 partial → (1.0 + 1.0 + 0.5) / 3 = **0.83**.
 *Why this focus, not Specificity/Clarity:* of the menu options, Fact Recall is the only one
 tied to a stated **MUST** (§1A: Key Facts "must be seamlessly included"), and it is the most
 objectively scorable and reference-groundable. Specificity is enforced upstream by the
@@ -258,6 +259,7 @@ choice, pacing, and sign-off embody the requested tone (9–10 flawless; 6–7 m
 3–5 off register; 1–2 wrong tone). Each rating is normalized as `(score − 1) / 9`; the
 metric is the mean across both judges. The wide, anchored scale was chosen after a 1–5
 scale saturated at the ceiling (see §4).
+*Example:* a judge rating of 8/10 → (8 − 1) / 9 = **0.78**.
 *Why this focus, not Format Adherence/Sentence Complexity:* Tone is a primary input (§1A)
 and the dimension most likely to separate two strong models, making it the most
 discriminating choice. Format Adherence is already covered deterministically by M3, and raw
@@ -273,6 +275,7 @@ length — 1.0 inside the 50–150-word target band, decaying linearly to 0.0 at
 role (a short salutation line; a short valediction line ending in a comma), not a fixed
 phrase list, so valid-but-unlisted openings/closings are not penalized. No LLM is used, so
 this metric is fully reproducible and unit-tested (`tests/test_metrics.py`).
+*Example:* subject ✓, greeting ✓, sign-off ✓, body 95 words (in band) → 4/4 = **1.0**.
 *Why this focus, not Introduction Effectiveness/Grammar:* Conciseness and format are
 checkable deterministically with no judge, giving the suite a bias-free, exactly
 reproducible anchor — the design priority for M3. Introduction Effectiveness and
