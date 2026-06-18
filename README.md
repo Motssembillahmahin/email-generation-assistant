@@ -4,14 +4,14 @@ An LLM-powered assistant that turns three structured inputs — **Intent**, **Ke
 **Tone** — into a polished, professional email, plus a custom evaluation harness that measures
 output quality and compares two models.
 
-This project is built around three things a senior LLM/prompt engineer is judged on:
+This project has three parts:
 
-1. **Advanced prompt engineering** — a documented Role-Play + Few-Shot + Chain-of-Thought
-   template with a bounded self-refinement loop as the core technique.
-2. **A defensible evaluation strategy** — three custom metrics (LLM-as-judge + deterministic),
-   scored over 10 scenarios with human reference emails.
-3. **A model comparison** — the same prompt run on **Claude Opus 4.8** and **Gemini 3.5 Flash**,
-   scored with a **dual-judge** design to neutralize LLM-as-judge self-preference bias.
+1. **The assistant** — a documented Role-Play + Few-Shot + Chain-of-Thought prompt with a
+   bounded self-refinement loop.
+2. **The evaluation** — three custom metrics (LLM-as-judge + deterministic) over 10 scenarios
+   with human reference emails.
+3. **The comparison** — the same prompt on **Claude Opus 4.8** vs **Gemini 3.5 Flash**, scored
+   with a **dual-judge** design to neutralize self-preference bias.
 
 Results live in `results/` and the full write-up — prompt template, metric definitions, raw
 data, and the model comparison — is in [`report/REPORT.md`](report/REPORT.md).
@@ -99,6 +99,8 @@ Full scores for all 10 scenarios across both models are in `results/` and analyz
   | Conciseness & Structure | Subject, greeting, sign-off, length band | Deterministic (Python) |
 - **Evaluation** (`src/email_assistant/evaluate.py`) — runs all scenarios on both models, writes
   raw scores and averages to `results/` (CSV + JSON).
+- **Interfaces** (`cli.py`, `app.py`) — a command-line entry point (`make generate`) and an
+  optional Streamlit UI (`make app`), both thin wrappers over `EmailGenerator`.
 
 ## Project layout
 
