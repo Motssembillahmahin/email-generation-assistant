@@ -11,6 +11,10 @@ dependencies = [
     "python-dotenv>=1.0",
 ]
 
+[project.optional-dependencies]
+# Optional Streamlit demo UI (`make app`); kept out of the core install.
+demo = ["streamlit>=1.40"]
+
 [dependency-groups]
 dev = [
     "pytest>=8.0",

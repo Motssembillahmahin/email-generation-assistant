@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help setup generate eval test lint format clean
+.PHONY: help setup generate app eval test lint format clean
 
 help:  ## Show available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -10,6 +10,9 @@ setup:  ## Install dependencies into a uv-managed virtualenv
 
 generate:  ## Generate one demo email (use ARGS="--intent ... --tone ...")
 	uv run python -m email_assistant.cli $(ARGS)
+
+app:  ## Launch the Streamlit demo UI
+	uv run --extra demo streamlit run src/email_assistant/app.py
 
 eval:  ## Run the full evaluation (10 scenarios x 2 models) -> results/
 	uv run python -m email_assistant.evaluate
