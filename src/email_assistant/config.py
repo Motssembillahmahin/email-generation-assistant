@@ -10,10 +10,14 @@ Model definitions live in ``models.py``; tunable constants in ``vars.py``.
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from functools import lru_cache
 
+import anthropic
 from dotenv import load_dotenv
+from google import genai
+from google.genai import types
 
 from email_assistant.models import MODELS
 from email_assistant.vars import DEFAULT_MAX_TOKENS
@@ -32,8 +36,6 @@ class Settings:
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
     """Return the resolved settings, read from the environment after ``.env`` is loaded."""
-    import os
-
     return Settings(
         anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY"),
         gemini_api_key=os.environ.get("GEMINI_API_KEY"),
@@ -42,8 +44,6 @@ def get_settings() -> Settings:
 
 @lru_cache(maxsize=1)
 def _anthropic_client():
-    import anthropic
-
     key = get_settings().anthropic_api_key
     if not key:
         raise RuntimeError("ANTHROPIC_API_KEY is not set — add it to .env.")
@@ -52,8 +52,6 @@ def _anthropic_client():
 
 @lru_cache(maxsize=1)
 def _gemini_client():
-    from google import genai
-
     key = get_settings().gemini_api_key
     if not key:
         raise RuntimeError("GEMINI_API_KEY is not set — add it to .env.")
@@ -84,8 +82,6 @@ def generate(model_key: str, system: str, user: str, max_tokens: int = DEFAULT_M
         return "".join(block.text for block in resp.content if block.type == "text")
 
     if spec.provider == "google":
-        from google.genai import types
-
         resp = _gemini_client().models.generate_content(
             model=spec.model_id,
             contents=user,
