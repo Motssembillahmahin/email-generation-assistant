@@ -1,0 +1,126 @@
+{
+  "description": "10 evaluation scenarios for the Email Generation Assistant. Each is a (intent, key_facts, tone) input plus a hand-written human reference email (the ideal output) used to ground the metrics. Designed to be demanding: 4-5 concrete facts each, harder tones, and three deliberate edge cases that stress grounding and no-fabrication discipline (contradictory-pricing, role-elimination, final-interview-invite has no date supplied). Reference emails use [Name] (recipient) and [Your name] (sender), matching the prompt's convention since scenarios provide no real names.",
+  "scenarios": [
+    {
+      "id": "project-delay",
+      "intent": "Tell a client the project will be delayed, explain why, and reassure them",
+      "key_facts": [
+        "The website redesign will miss its original May 30 launch date",
+        "The new launch date is June 20",
+        "The delay is because we chose to add a round of accessibility testing",
+        "The agreed budget will not increase"
+      ],
+      "tone": "apologetic but confident",
+      "reference_email": "Subject: Update on the website redesign timeline\n\nHi [Name],\n\nI want to be upfront with you: the website redesign will miss its original May 30 launch date, and I'm sorry for the change in plan.\n\nThe reason is a deliberate one — we chose to add a round of accessibility testing so the site works well for every visitor, and that pushes our new launch date to June 20. I'm confident the result will be stronger for it.\n\nTo be clear, this does not affect the agreed budget; there will be no additional cost on your side. Thank you for your patience, and I'm happy to walk you through the revised plan whenever suits you.\n\nBest regards,\n[Your name]"
+    },
+    {
+      "id": "rfp-detailed",
+      "intent": "Request detailed proposal information from a vendor",
+      "key_facts": [
+        "We need pricing for 250 user licenses across three departments",
+        "We require SOC 2 Type II and GDPR compliance documentation",
+        "We need written confirmation that single sign-on (SSO) is supported",
+        "Our decision deadline is March 31"
+      ],
+      "tone": "formal",
+      "reference_email": "Subject: Request for Proposal Details\n\nDear [Name],\n\nThank you for your time so far. To complete our evaluation, I would like to request a few specifics from your team.\n\nCould you provide pricing for 250 user licenses across three departments, along with your SOC 2 Type II and GDPR compliance documentation? We would also need written confirmation that single sign-on (SSO) is supported.\n\nTo keep our process on track, we would be grateful to receive these materials ahead of our decision deadline of March 31. Please let me know if you require anything further from our side.\n\nSincerely,\n[Your name]"
+    },
+    {
+      "id": "outage-postmortem",
+      "intent": "Send a transparent post-incident summary to affected customers",
+      "key_facts": [
+        "The outage on Monday lasted 47 minutes, from 2:03 to 2:50 PM",
+        "The cause was a failed database migration",
+        "Roughly 8% of users were unable to place orders during that window",
+        "We have added automated rollback to prevent a recurrence",
+        "Affected customers will receive a 10% credit on their next invoice"
+      ],
+      "tone": "transparent and professional",
+      "reference_email": "Subject: What happened Monday — and what we've fixed\n\nHi [Name],\n\nI want to be transparent about Monday's disruption. From 2:03 to 2:50 PM — 47 minutes in total — a failed database migration prevented roughly 8% of users from placing orders.\n\nWe have since added automated rollback, so a migration that fails can no longer take the system down with it. As an apology for the inconvenience, every affected customer will receive a 10% credit on their next invoice.\n\nThank you for your patience and your trust. If you have any questions about the incident, I'm glad to answer them.\n\nBest regards,\n[Your name]"
+    },
+    {
+      "id": "contradictory-pricing",
+      "intent": "Resolve a pricing discrepancy with a client before invoicing",
+      "key_facts": [
+        "Our records contain two different quotes for the same project",
+        "One quote lists the price at $12,000",
+        "The other quote lists the price at $15,000",
+        "We need to confirm the correct figure before Friday"
+      ],
+      "tone": "professional and clear",
+      "reference_email": "Subject: Confirming the final price before Friday\n\nHi [Name],\n\nBefore we move ahead, I want to make sure we're aligned on pricing. Looking at our records, I see two different quotes for the same project — one at $12,000 and another at $15,000 — and I'd rather confirm than assume.\n\nCould you let me know which figure reflects the scope we agreed on? Once we've settled that, I'll finalize everything on our end right away. To stay on schedule, it would be ideal to confirm before Friday.\n\nThanks for your help sorting this out.\n\nBest regards,\n[Your name]"
+    },
+    {
+      "id": "role-elimination",
+      "intent": "Inform an employee that their role is being eliminated, with empathy and clear next steps",
+      "key_facts": [
+        "The Marketing Coordinator role is being eliminated effective March 15",
+        "Severance of 12 weeks' pay will be provided",
+        "Health benefits will continue through April 30",
+        "Outplacement support is available for three months"
+      ],
+      "tone": "empathetic but clear",
+      "reference_email": "Subject: An important and difficult update about your role\n\nDear [Name],\n\nI'm writing with news I wish I didn't have to share: following a restructuring of the team, the Marketing Coordinator role is being eliminated, effective March 15. This reflects changes to the business, not your contributions, which have been genuinely valued.\n\nI want to make this transition as supported as possible. You will receive 12 weeks of severance pay, and your health benefits will continue through April 30. We are also providing outplacement support for three months to help with your next step.\n\nI'm here to talk this through whenever you're ready, and to answer any questions you have.\n\nWith care,\n[Your name]"
+    },
+    {
+      "id": "team-offsite-invite",
+      "intent": "Invite the team to a company offsite and ask them to RSVP",
+      "key_facts": [
+        "The offsite is on Friday, July 18, from 10 AM to 4 PM",
+        "It is at the Lakeside Lodge, about 30 minutes from the office",
+        "The theme is 'reset and reconnect', with workshops and games",
+        "Please RSVP by July 7 and note any dietary needs"
+      ],
+      "tone": "casual and upbeat",
+      "reference_email": "Subject: You're invited — team offsite on July 18!\n\nHey team,\n\nSave the date: our team offsite is happening Friday, July 18, from 10 AM to 4 PM, and it's going to be a good one.\n\nWe'll be heading to the Lakeside Lodge, about 30 minutes from the office, for a day themed around \"reset and reconnect\" — a mix of hands-on workshops and games (yes, there will be prizes).\n\nCould you RSVP by July 7, and let me know about any dietary needs while you're at it? Hope to see you all there!\n\nCheers,\n[Your name]"
+    },
+    {
+      "id": "support-escalation",
+      "intent": "Escalate an unresolved support ticket that has breached its SLA",
+      "key_facts": [
+        "Ticket #2291 has been open for nine days with no resolution",
+        "This breaches the 48-hour SLA in our contract",
+        "The unresolved issue is blocking our production deployment",
+        "We are requesting escalation to a senior engineer today"
+      ],
+      "tone": "firm and urgent",
+      "reference_email": "Subject: Escalation needed — Ticket #2291 (SLA breached)\n\nHi [Name],\n\nI need to escalate ticket #2291, which has now been open for nine days without resolution. That puts it well beyond the 48-hour SLA in our contract.\n\nThis is not a minor inconvenience — the unresolved issue is actively blocking our production deployment. I am therefore requesting that it be escalated to a senior engineer today.\n\nPlease confirm who will be taking this on and when I can expect an update. I'm available immediately to provide whatever details would help.\n\nRegards,\n[Your name]"
+    },
+    {
+      "id": "final-interview-invite",
+      "intent": "Invite a candidate to a final-round onsite interview and outline what to expect",
+      "key_facts": [
+        "The final round is a 4-hour onsite session",
+        "They will meet a panel of three team members",
+        "Lunch will be provided",
+        "Validated parking is available in the building garage"
+      ],
+      "tone": "warm and professional",
+      "reference_email": "Subject: Inviting you to our final-round interview\n\nHi [Name],\n\nWe've really enjoyed getting to know you, and we'd love to bring you in for our final round. Rather than lock in a time now, I'd like to find a slot that works for you — could you share your availability over the next couple of weeks?\n\nIt will be an onsite session of about four hours, during which you'll meet a panel of three team members. We'll provide lunch, and validated parking is available in the building garage, so that side of things is taken care of.\n\nLooking forward to it — just send me some times and I'll coordinate the rest.\n\nWarm regards,\n[Your name]"
+    },
+    {
+      "id": "partnership-pitch",
+      "intent": "Pitch a business partnership and propose a low-risk first step",
+      "key_facts": [
+        "Combined, we would reach an audience of around 2 million users",
+        "We propose a 60/40 revenue split in your favor",
+        "We suggest a 90-day pilot before any long-term commitment",
+        "We'd like to kick off with a joint webinar in September"
+      ],
+      "tone": "confident and persuasive",
+      "reference_email": "Subject: A partnership I think could be big for both of us\n\nHi [Name],\n\nI'll get right to it: I see a real opportunity for our teams to work together. Combined, we would reach an audience of around 2 million users — a reach neither of us has alone.\n\nTo make it easy to say yes, we're proposing a 60/40 revenue split in your favor and a 90-day pilot before any long-term commitment, so we both get to prove the model with low risk. If it lands well, we'd love to kick off with a joint webinar in September.\n\nCould we find 30 minutes to explore it? I'm confident it will be worth the conversation.\n\nBest regards,\n[Your name]"
+    },
+    {
+      "id": "expense-policy-update",
+      "intent": "Announce changes to the company expense policy",
+      "key_facts": [
+        "Starting September 1, any expense over $100 requires pre-approval",
+        "Receipts must be submitted within 14 days of purchase",
+        "Reimbursements will be processed twice monthly, on the 1st and the 15th",
+        "Questions go to the finance team via the #finance Slack channel"
+      ],
+      "tone": "clear and direct",
+      "reference_email": "Subject: Updates to our expense policy, effective September 1\n\nHi team,\n\nA few changes to how we handle expenses, starting September 1 — please read through so nothing catches you off guard.\n\nFirst, any expense over $100 will require pre-approval before purchase. Second, receipts must be submitted within 14 days of purchase to be reimbursed. And third, reimbursements move to a twice-monthly schedule, processed on the 1st and the 15th.\n\nIf anything is unclear or you hit an edge case, post in the #finance Slack channel and the finance team will help. Thanks for keeping us all compliant.\n\nBest,\n[Your name]"
+    }
+  ]
+}
