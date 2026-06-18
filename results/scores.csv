@@ -1,0 +1,23 @@
+model,scenario_id,tone,fact_coverage,tone_alignment,conciseness_structure,overall
+claude,project-delay,apologetic but confident,1.0,0.8889,1.0,0.963
+claude,rfp-detailed,formal,1.0,0.9444,1.0,0.9815
+claude,outage-postmortem,transparent and professional,1.0,0.9444,1.0,0.9815
+claude,contradictory-pricing,professional and clear,1.0,0.9444,1.0,0.9815
+claude,role-elimination,empathetic but clear,1.0,0.9444,1.0,0.9815
+claude,team-offsite-invite,casual and upbeat,1.0,0.9444,1.0,0.9815
+claude,support-escalation,firm and urgent,1.0,0.8889,1.0,0.963
+claude,final-interview-invite,warm and professional,1.0,0.9444,1.0,0.9815
+claude,partnership-pitch,confident and persuasive,1.0,0.8333,1.0,0.9444
+claude,expense-policy-update,clear and direct,1.0,0.8889,1.0,0.963
+gemini,project-delay,apologetic but confident,1.0,0.8889,1.0,0.963
+gemini,rfp-detailed,formal,1.0,0.9444,1.0,0.9815
+gemini,outage-postmortem,transparent and professional,1.0,0.9444,1.0,0.9815
+gemini,contradictory-pricing,professional and clear,1.0,0.9444,1.0,0.9815
+gemini,role-elimination,empathetic but clear,1.0,0.8889,1.0,0.963
+gemini,team-offsite-invite,casual and upbeat,1.0,0.7222,1.0,0.9074
+gemini,support-escalation,firm and urgent,1.0,0.8333,1.0,0.9444
+gemini,final-interview-invite,warm and professional,1.0,0.9444,1.0,0.9815
+gemini,partnership-pitch,confident and persuasive,1.0,0.7778,1.0,0.9259
+gemini,expense-policy-update,clear and direct,1.0,0.8889,1.0,0.963
+claude,AVERAGE,,1.0,0.9167,1.0,0.9722
+gemini,AVERAGE,,1.0,0.8778,1.0,0.9593

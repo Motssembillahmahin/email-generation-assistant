@@ -1,0 +1,759 @@
+{
+  "metric_definitions": {
+    "fact_coverage": "Fact Coverage (LLM-as-judge, dual). For each key fact, two judges (Claude + Gemini) independently classify coverage as full (1.0 \u2014 stated accurately and completely), partial (0.5 \u2014 present but vague, incomplete, or slightly altered), or none (0.0 \u2014 absent or contradicted). Per-judge score = mean over facts; the metric is the mean across both judges. Partial credit makes the metric sensitive to subtle distortions, not just omissions. Range 0.0-1.0.",
+    "tone_alignment": "Tone Alignment (LLM-as-judge, dual). Two judges (Claude + Gemini) each rate, on a strict 1-10 rubric, how precisely the email's greeting, word choice, pacing, and sign-off embody the requested tone (9-10 flawless; 6-7 minor slips; 3-5 off register; 1-2 wrong tone). Each rating is normalized as (score - 1) / 9 and the metric is the mean across both judges. Range 0.0-1.0.",
+    "conciseness_structure": "Conciseness & Structure (deterministic Python). Mean of four equally weighted checks: (1) a non-empty subject line is present; (2) a greeting opens the body; (3) a sign-off closes the body; (4) a density score for body length \u2014 1.0 inside the 50-150 word target band, decaying linearly to 0.0 at <=20 words (too thin) or >=200 words (the hard ceiling). No LLM is used. Range 0.0-1.0."
+  },
+  "judges": [
+    "claude",
+    "gemini"
+  ],
+  "models": {
+    "claude": {
+      "key": "claude",
+      "label": "Claude Opus 4.8",
+      "model_id": "claude-opus-4-8",
+      "scenarios": [
+        {
+          "scenario_id": "project-delay",
+          "intent": "Tell a client the project will be delayed, explain why, and reassure them",
+          "tone": "apologetic but confident",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.8888888888888888,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9629629629629629,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.7777777777777778,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 108
+            }
+          },
+          "email_text": "Subject: Update on your website redesign timeline\n\nHi [Name],\n\nI want to be upfront with you: the website redesign will not meet its original May 30 launch date, and I apologize for the change to our plan.\n\nWe have set a new launch date of June 20 to accommodate an additional round of accessibility testing. This was a deliberate choice on our part \u2014 we want the finished site to work seamlessly for every visitor, and these few extra weeks will ensure it meets that standard.\n\nImportantly, this does not affect our agreed budget, which remains unchanged.\n\nI am happy to walk you through the revised plan whenever it suits you.\n\nBest regards,\n[Your name]"
+        },
+        {
+          "scenario_id": "rfp-detailed",
+          "intent": "Request detailed proposal information from a vendor",
+          "tone": "formal",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 101
+            }
+          },
+          "email_text": "Subject: Request for Detailed Proposal \u2014 250 Licenses\n\nDear [Name],\n\nWe are evaluating your solution for adoption across our organization and would be grateful to receive a detailed proposal addressing the following:\n\nFirst, pricing for 250 user licenses distributed across three departments. Second, your current SOC 2 Type II and GDPR compliance documentation. Third, written confirmation that single sign-on (SSO) is supported.\n\nAs our selection process is on a defined timeline, we would appreciate receiving this information in advance of our decision deadline of March 31.\n\nPlease do not hesitate to contact me should you require any clarification. Thank you for your attention to this request.\n\nSincerely,\n[Your name]"
+        },
+        {
+          "scenario_id": "outage-postmortem",
+          "intent": "Send a transparent post-incident summary to affected customers",
+          "tone": "transparent and professional",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 5
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 124
+            }
+          },
+          "email_text": "Subject: What happened during Monday's outage \u2014 and what we've done\n\nHi [Name],\n\nI want to be straightforward about a service disruption you may have experienced on Monday. Between 2:03 and 2:50 PM \u2014 a window of 47 minutes \u2014 roughly 8% of users were unable to place orders.\n\nThe cause was a failed database migration on our end. We take full responsibility for the impact this had on your ability to do business.\n\nTo prevent this from happening again, we have added automated rollback so that a migration like this reverts immediately rather than affecting live traffic.\n\nAs an apology for the inconvenience, affected customers will receive a 10% credit on their next invoice; no action is needed on your part.\n\nThank you for your understanding and your continued trust.\n\nBest regards,\n[Your name]"
+        },
+        {
+          "scenario_id": "contradictory-pricing",
+          "intent": "Resolve a pricing discrepancy with a client before invoicing",
+          "tone": "professional and clear",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 75
+            }
+          },
+          "email_text": "Subject: Quick confirmation needed on project pricing\n\nHi [Name],\n\nBefore we issue your invoice, I want to make sure we bill the correct amount. Our records currently show two different quotes for the same project \u2014 one at $12,000 and another at $15,000.\n\nSo we can finalize everything accurately, could you confirm which figure is correct? We would appreciate hearing back before Friday to keep the invoicing on schedule.\n\nThank you for your help in clearing this up.\n\nBest regards,\n[Your name]"
+        },
+        {
+          "scenario_id": "role-elimination",
+          "intent": "Inform an employee that their role is being eliminated, with empathy and clear next steps",
+          "tone": "empathetic but clear",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 127
+            }
+          },
+          "email_text": "Subject: Important update regarding your role\n\nDear [Name],\n\nI'm writing to share a difficult decision. Following a review of our structure, the Marketing Coordinator role is being eliminated effective March 15. I know this news is hard to receive, and I want to be straightforward with you while making sure you have the support you need.\n\nTo help with this transition, you will receive 12 weeks' severance pay, and your health benefits will continue through April 30. We hope this provides some stability as you plan your next steps.\n\nIn addition, outplacement support will be available to you for three months to assist with your job search and career planning.\n\nI'd welcome the chance to talk through any questions whenever you're ready. Please don't hesitate to reach out.\n\nWith sincere appreciation,\n[Your name]"
+        },
+        {
+          "scenario_id": "team-offsite-invite",
+          "intent": "Invite the team to a company offsite and ask them to RSVP",
+          "tone": "casual and upbeat",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 109
+            }
+          },
+          "email_text": "Subject: You're invited \u2014 team offsite on July 18!\n\nHey team,\n\nLet's get out of the office and recharge together! We're hosting a company offsite on Friday, July 18, from 10 AM to 4 PM at the Lakeside Lodge, just about 30 minutes away.\n\nThe theme is \"reset and reconnect,\" so expect a mix of hands-on workshops and some fun games \u2014 a chance to step back, swap ideas, and enjoy each other's company outside the usual routine.\n\nCould you RSVP by July 7 and let me know about any dietary needs while you're at it? That way we can make sure everyone's looked after on the day.\n\nCan't wait to see you all there!\n\nCheers,\n[Your name]"
+        },
+        {
+          "scenario_id": "support-escalation",
+          "intent": "Escalate an unresolved support ticket that has breached its SLA",
+          "tone": "firm and urgent",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.8888888888888888,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9629629629629629,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.7777777777777778,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 92
+            }
+          },
+          "email_text": "Subject: Escalation required \u2014 Ticket #2291 has breached SLA\n\nHello,\n\nTicket #2291 has now been open for nine days without resolution, well beyond the 48-hour SLA committed in our contract. This is no longer a routine delay \u2014 it represents a clear breach of our agreement.\n\nThe unresolved issue is actively blocking our production deployment, and every additional day of inaction compounds the impact on our business.\n\nWe are formally requesting that this ticket be escalated to a senior engineer today. Please confirm the escalation and provide a concrete plan for resolution as soon as it is assigned.\n\nRegards,\n[Your name]"
+        },
+        {
+          "scenario_id": "final-interview-invite",
+          "intent": "Invite a candidate to a final-round onsite interview and outline what to expect",
+          "tone": "warm and professional",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 110
+            }
+          },
+          "email_text": "Subject: Invitation to your final-round onsite interview\n\nHi [Name],\n\nCongratulations on reaching the final round \u2014 we are excited to host you for an onsite interview and to introduce you to the team in person.\n\nPlease plan for a four-hour onsite session, during which you will meet with a panel of three team members. It is a great chance for both of us to dig deeper and make sure the role is the right fit.\n\nTo make the day comfortable, lunch will be provided, and validated parking is available in the building garage.\n\nCould you let me know your availability so we can lock in a date? We look forward to welcoming you.\n\nWarm regards,\n[Your name]"
+        },
+        {
+          "scenario_id": "partnership-pitch",
+          "intent": "Pitch a business partnership and propose a low-risk first step",
+          "tone": "confident and persuasive",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.8333333333333333,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9444444444444443,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.7777777777777778,
+                "gemini": 0.8888888888888888
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 124
+            }
+          },
+          "email_text": "Subject: A partnership that puts 2 million users within reach\n\nHi [Name],\n\nTogether, our two brands would reach an audience of around 2 million users \u2014 a combined reach neither of us commands alone, and a genuine opportunity to grow on both sides.\n\nTo make this easy to say yes to, we are proposing a 60/40 revenue split in your favor and a 90-day pilot, so we can prove the value together before either of us commits to anything long-term. The upside is real and the downside is minimal.\n\nThe strongest way to start is a joint webinar in September, putting both audiences in the same room from day one.\n\nCould we find time this week to lock in the details? I am confident this will be worth your while.\n\nBest regards,\n[Your name]"
+        },
+        {
+          "scenario_id": "expense-policy-update",
+          "intent": "Announce changes to the company expense policy",
+          "tone": "clear and direct",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.8888888888888888,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9629629629629629,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.7777777777777778,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 99
+            }
+          },
+          "email_text": "Subject: Updated expense policy effective September 1\n\nHi team,\n\nWe're updating our expense policy, with changes taking effect September 1. Please review the points below so your submissions stay on track.\n\nFrom September 1, any expense over $100 will require pre-approval before purchase. Receipts must be submitted within 14 days of the purchase date to qualify for reimbursement.\n\nReimbursements will be processed twice monthly, on the 1st and the 15th, so timing your submissions accordingly will help you get paid sooner.\n\nIf you have any questions, post them to the finance team in the #finance Slack channel and they'll be happy to help.\n\nThanks,\n[Your name]"
+        }
+      ],
+      "averages": {
+        "fact_coverage": 1.0,
+        "tone_alignment": 0.9166666666666667,
+        "conciseness_structure": 1.0,
+        "overall": 0.9722222222222223
+      }
+    },
+    "gemini": {
+      "key": "gemini",
+      "label": "Gemini 3.5 Flash",
+      "model_id": "gemini-3.5-flash",
+      "scenarios": [
+        {
+          "scenario_id": "project-delay",
+          "intent": "Tell a client the project will be delayed, explain why, and reassure them",
+          "tone": "apologetic but confident",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.8888888888888888,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9629629629629629,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.7777777777777778,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 142
+            }
+          },
+          "email_text": "Subject: Update regarding your website redesign launch date\n\nHi [Name],\n\nI am writing to share an important update regarding our upcoming launch. We have made the decision to add an extra round of comprehensive accessibility testing to the website redesign. Because of this, we will miss our original May 30 launch date, and our new target launch date is June 20. \n\nPlease accept our sincere apologies for this delay. We are confident that dedicating this additional time to accessibility is the right decision and will ensure a highly polished, fully compliant user experience for your audience. \n\nI also want to reassure you that this extra work will not increase your agreed budget; we are absorbing all associated costs. \n\nThank you for your understanding as we finalize these details. Please let me know if you would like to schedule a brief call to discuss this schedule update.\n\nBest regards,\n\n[Your name]"
+        },
+        {
+          "scenario_id": "rfp-detailed",
+          "intent": "Request detailed proposal information from a vendor",
+          "tone": "formal",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 93
+            }
+          },
+          "email_text": "Subject: RFP: Proposal requirements for user licenses\n\nDear [Name],\n\nAs we evaluate potential partners for our upcoming project, we would like to request a detailed proposal from your team. \n\nTo help us make our decision, please provide information on the following requirements:\n\n1. Pricing for 250 user licenses, structured to span across three distinct departments.\n2. Your current SOC 2 Type II and GDPR compliance documentation.\n3. Written confirmation that your platform supports single sign-on (SSO).\n\nOur internal decision deadline is March 31. Please let me know if you need any additional clarification to meet this timeline.\n\nSincerely,\n\n[Your name]"
+        },
+        {
+          "scenario_id": "outage-postmortem",
+          "intent": "Send a transparent post-incident summary to affected customers",
+          "tone": "transparent and professional",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 5
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 104
+            }
+          },
+          "email_text": "Subject: Post-incident update: Monday's ordering disruption\n\nDear Customer,\n\nI am writing to share a transparent update regarding the system disruption this past Monday. The outage lasted for 47 minutes, from 2:03 to 2:50 PM, and was caused by a failed database migration. During this window, roughly 8% of our users were unable to place orders. \n\nTo prevent a recurrence of this issue, our engineering team has added an automated rollback mechanism to our deployment process. \n\nWe sincerely value your partnership, and we are applying a 10% credit to your next invoice as a gesture of our commitment to your experience. Thank you for your patience and understanding.\n\nSincerely,\n\n[Your name]"
+        },
+        {
+          "scenario_id": "contradictory-pricing",
+          "intent": "Resolve a pricing discrepancy with a client before invoicing",
+          "tone": "professional and clear",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 83
+            }
+          },
+          "email_text": "Subject: Quote verification for your upcoming invoice\n\nHello [Client Name],\n\nAs we prepare to generate your invoice, we noticed a discrepancy in our records for your project. We currently have two different quotes on file for the same work: one listing the price at $12,000, and another listing it at $15,000. \n\nCould you please let us know which figure is correct? We would appreciate your confirmation before Friday so we can process the invoice accurately and on time. \n\nThank you for your help in resolving this.\n\nBest regards,\n\n[Your name]"
+        },
+        {
+          "scenario_id": "role-elimination",
+          "intent": "Inform an employee that their role is being eliminated, with empathy and clear next steps",
+          "tone": "empathetic but clear",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.8888888888888888,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9629629629629629,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.7777777777777778,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 130
+            }
+          },
+          "email_text": "Subject: Important update regarding your role\n\nDear [Employee Name],\n\nI am writing to share some difficult news. Due to a restructuring within our department, the Marketing Coordinator role is being eliminated, effective March 15. Please know that this decision is a result of organizational changes and is in no way a reflection of your performance or dedication.\n\nWe want to support you through this transition. To assist you, we are providing 12 weeks of severance pay, and your health benefits will continue through April 30. Additionally, you will have access to professional outplacement support for three months to help with your next career steps.\n\nI will send a follow-up calendar invitation shortly so we can discuss these details, answer any questions you have, and review the transition agreement together. \n\nWith appreciation for your contributions,\n\n[Your name]"
+        },
+        {
+          "scenario_id": "team-offsite-invite",
+          "intent": "Invite the team to a company offsite and ask them to RSVP",
+          "tone": "casual and upbeat",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.7222222222222222,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9074074074074074,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.6666666666666666,
+                "gemini": 0.7777777777777778
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 118
+            }
+          },
+          "email_text": "Subject: Team Offsite: Let's reset and reconnect on July 18!\n\nHi team,\n\nIt is time for us to get away from our screens and spend some quality time together! We are hosting our next company offsite, and the theme this time around is 'reset and reconnect.' We have a great day planned for you filled with interactive workshops and fun games. \n\nHere are the details:\n* **When:** Friday, July 18, from 10:00 AM to 4:00 PM\n* **Where:** Lakeside Lodge (only about a 30-minute drive from the office)\n\nTo help us finalize the plans, please RSVP by Monday, July 7. When you reply, please make sure to let us know if you have any dietary restrictions or preferences. \n\nCan't wait to see you all there!\n\nCheers,\n\n[Your name]"
+        },
+        {
+          "scenario_id": "support-escalation",
+          "intent": "Escalate an unresolved support ticket that has breached its SLA",
+          "tone": "firm and urgent",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.8333333333333333,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9444444444444443,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.7777777777777778,
+                "gemini": 0.8888888888888888
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 70
+            }
+          },
+          "email_text": "Subject: SLA Breach: Urgent escalation required for Ticket #2291\n\nSupport Team,\n\nI am writing to escalate Ticket #2291, which has now been open for nine days without resolution. This delay directly breaches the 48-hour SLA established in our contract. \n\nThis unresolved issue is currently blocking our production deployment. We require this ticket to be escalated to a senior engineer today to resolve the blocker immediately. \n\nI expect an update on this escalation as soon as possible.\n\nSincerely,\n\n[Your name]"
+        },
+        {
+          "scenario_id": "final-interview-invite",
+          "intent": "Invite a candidate to a final-round onsite interview and outline what to expect",
+          "tone": "warm and professional",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.9444444444444444,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9814814814814815,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.8888888888888888,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 96
+            }
+          },
+          "email_text": "Subject: Invitation to final-round interview\n\nHi [Candidate Name],\n\nWe are thrilled to invite you to the final round of interviews at our office. \n\nYour visit will consist of a 4-hour onsite session where you will meet with a panel of three team members. We want to make sure your time with us is comfortable, so lunch will be provided. If you are driving, validated parking is also available for you in the building garage. \n\nPlease let us know a few dates and times over the coming week that work for your schedule so we can finalize the details.\n\nWarmly,\n\n[Your name]"
+        },
+        {
+          "scenario_id": "partnership-pitch",
+          "intent": "Pitch a business partnership and propose a low-risk first step",
+          "tone": "confident and persuasive",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.7777777777777777,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9259259259259259,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.6666666666666666,
+                "gemini": 0.8888888888888888
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 112
+            }
+          },
+          "email_text": "Subject: Partnership opportunity: Reaching 2 million users together\n\nHi [Name],\n\nWe have a unique opportunity to quickly scale our reach by combining our forces. Together, we would instantly connect with an audience of around 2 million highly engaged users. \n\nTo ensure this is mutually beneficial and low-risk, we suggest starting with a simple 90-day pilot before making any long-term commitments. To demonstrate our commitment to making this work, we propose a 60/40 revenue split in your favor for this initial phase. \n\nWe would love to kick things off with a joint webinar this September to build immediate momentum. Are you open to a brief call next week to discuss how we can bring this to life?\n\nBest regards,\n\n[Your name]"
+        },
+        {
+          "scenario_id": "expense-policy-update",
+          "intent": "Announce changes to the company expense policy",
+          "tone": "clear and direct",
+          "scores": {
+            "fact_coverage": 1.0,
+            "tone_alignment": 0.8888888888888888,
+            "conciseness_structure": 1.0
+          },
+          "overall": 0.9629629629629629,
+          "detail": {
+            "fact_coverage": {
+              "per_judge": {
+                "claude": 1.0,
+                "gemini": 1.0
+              },
+              "n_facts": 4
+            },
+            "tone_alignment": {
+              "per_judge": {
+                "claude": 0.7777777777777778,
+                "gemini": 1.0
+              }
+            },
+            "conciseness_structure": {
+              "checks": {
+                "has_subject": 1.0,
+                "has_greeting": 1.0,
+                "has_signoff": 1.0,
+                "density": 1.0
+              },
+              "word_count": 82
+            }
+          },
+          "email_text": "Subject: Update: Changes to company expense policy\n\nHi everyone,\n\nWe are updating our company expense policy to streamline our financial processes. Please note the following changes, which take effect on September 1:\n\n* **Pre-approval:** Any expense over $100 requires pre-approval.\n* **Receipt submission:** All receipts must be submitted within 14 days of purchase.\n* **Reimbursement schedule:** Reimbursements will be processed twice monthly, on the 1st and the 15th.\n\nIf you have any questions, please reach out to the finance team via the #finance Slack channel.\n\nBest regards,\n\n[Your name]"
+        }
+      ],
+      "averages": {
+        "fact_coverage": 1.0,
+        "tone_alignment": 0.8777777777777777,
+        "conciseness_structure": 1.0,
+        "overall": 0.9592592592592594
+      }
+    }
+  }
+}
