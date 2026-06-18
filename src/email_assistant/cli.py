@@ -11,14 +11,14 @@ from __future__ import annotations
 
 import argparse
 
-from email_assistant import config
 from email_assistant.generator import EmailGenerator
+from email_assistant.models import MODELS
 
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description="Generate a professional email.")
     parser.add_argument(
-        "--model", default="claude", choices=list(config.MODELS), help="model to use"
+        "--model", default="claude", choices=list(MODELS), help="model to use"
     )
     parser.add_argument("--intent", required=True, help="purpose of the email")
     parser.add_argument(
@@ -29,7 +29,7 @@ def main(argv: list[str] | None = None) -> None:
 
     result = EmailGenerator(args.model).generate(args.intent, args.facts, args.tone)
 
-    print(f"# {config.MODELS[args.model].label}\n")
+    print(f"# {MODELS[args.model].label}\n")
     print(result.email_text)
 
 

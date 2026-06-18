@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from email_assistant import config
+from email_assistant.models import MODELS
 from email_assistant.prompts import (
     EMAIL_CLOSE,
     EMAIL_OPEN,
@@ -73,8 +74,8 @@ class EmailGenerator:
     """Generates emails with one configured model."""
 
     def __init__(self, model_key: str):
-        if model_key not in config.MODELS:
-            raise ValueError(f"unknown model {model_key!r}; choose from {list(config.MODELS)}")
+        if model_key not in MODELS:
+            raise ValueError(f"unknown model {model_key!r}; choose from {list(MODELS)}")
         self.model_key = model_key
 
     def generate(self, intent: str, key_facts: Sequence[str], tone: str) -> GeneratedEmail:
