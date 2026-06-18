@@ -6,13 +6,15 @@ output quality and compares two models.
 
 This project is built around three things a senior LLM/prompt engineer is judged on:
 
-1. **Advanced prompt engineering** — a documented Role-Play + Few-Shot + Chain-of-Thought template.
+1. **Advanced prompt engineering** — a documented Role-Play + Few-Shot + Chain-of-Thought
+   template with a bounded self-refinement loop as the core technique.
 2. **A defensible evaluation strategy** — three custom metrics (LLM-as-judge + deterministic),
    scored over 10 scenarios with human reference emails.
 3. **A model comparison** — the same prompt run on **Claude Opus 4.8** and **Gemini 3.5 Flash**,
    scored with a **dual-judge** design to neutralize LLM-as-judge self-preference bias.
 
-> Status: scaffolding. Implementation lands incrementally — see the commit history.
+Results live in `results/` and the full write-up — prompt template, metric definitions, raw
+data, and the model comparison — is in [`report/REPORT.md`](report/REPORT.md).
 
 ## Quickstart
 
@@ -36,6 +38,8 @@ make test
 
 ## How it works
 
+- **Config** (`src/email_assistant/{vars,models,config}.py`) — `vars.py` holds constants and paths,
+  `models.py` the model registry, and `config.py` loads `.env`/settings and wraps both provider SDKs.
 - **Generator** (`src/email_assistant/generator.py`) — sends the structured inputs through the
   advanced prompt and parses the final email out of the model's response.
 - **Prompt** (`src/email_assistant/prompts.py`) — the documented advanced-prompting template.
@@ -51,7 +55,7 @@ make test
 ## Project layout
 
 ```
-src/email_assistant/   config · prompts · generator · metrics · evaluate
+src/email_assistant/   vars · models · config · prompts · generator · metrics · evaluate
 data/scenarios.json    10 scenarios + human reference emails
 results/               committed evaluation outputs (CSV/JSON)
 report/REPORT.md       final report
