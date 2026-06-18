@@ -103,7 +103,7 @@ Full scores for all 10 scenarios across both models are in `results/` and analyz
 ## Project layout
 
 ```
-src/email_assistant/   vars · models · config · prompts · generator · metrics · evaluate
+src/email_assistant/   vars · models · config · prompts · generator · metrics · evaluate · cli · app
 data/scenarios.json    10 scenarios + human reference emails
 results/               committed evaluation outputs (CSV/JSON)
 report/REPORT.md       final report

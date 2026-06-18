@@ -1,5 +1,28 @@
 # Email Generation Assistant — Final Report
 
+## Contents
+
+- [1. Overview](#1-overview)
+- [2. Prompt Engineering](#2-prompt-engineering)
+  - [2.1 Architecture — 11 explicit, gradeable sections](#21-architecture--11-explicit-gradeable-sections)
+  - [2.2 Technique selection](#22-technique-selection)
+  - [2.3 Robustness features](#23-robustness-features)
+  - [2.4 Output contract](#24-output-contract)
+  - [2.5 Prompt template](#25-prompt-template)
+- [3. Evaluation Strategy — Custom Metrics](#3-evaluation-strategy--custom-metrics)
+  - [3.1 The three metrics](#31-the-three-metrics)
+  - [3.2 Why this design is defensible](#32-why-this-design-is-defensible)
+- [4. Raw Evaluation Data](#4-raw-evaluation-data)
+  - [4.1 Per-scenario scores](#41-per-scenario-scores)
+  - [4.2 Summary](#42-summary)
+- [5. Model Comparison & Analysis](#5-model-comparison--analysis)
+  - [5.1 Which model/strategy performed better according to the 3 custom metrics?](#51-which-modelstrategy-performed-better-according-to-the-3-custom-metrics)
+  - [5.2 What was the biggest failure mode of the lower-performing model?](#52-what-was-the-biggest-failure-mode-of-the-lower-performing-model)
+  - [5.3 Which model do you recommend for production, and why?](#53-which-model-do-you-recommend-for-production-and-why)
+  - [5.4 Limitations](#54-limitations-read-the-result-honestly)
+
+---
+
 ## 1. Overview
 
 An LLM assistant that turns three structured inputs — **Intent**, **Key Facts**, and
@@ -202,9 +225,9 @@ In your "Critique & refine" step, verify each item explicitly and revise on any 
 6. Action — confirm exactly one call to action, or none if the Intent needs none.
 ```
 
-> Note: Examples 1–2 are illustrative few-shot anchors. The two scenarios that mirrored
-> them were deliberately **removed** from the evaluation set so the prompt is never graded
-> on its own examples (see §4).
+> Note: Examples 1–2 are illustrative few-shot anchors. The evaluation set deliberately
+> contains **no** scenario mirroring them, so the prompt is never graded on its own
+> examples (see §4).
 
 ---
 
@@ -224,6 +247,10 @@ incomplete, or slightly altered), or **none** (0.0 — absent or contradicted). 
 score = mean over facts; the metric is the mean across both judges. The 3-level scale makes
 the metric sensitive to subtle distortions (a changed number/date), not just outright
 omissions — the highest-priority requirement in the prompt's Priority Order.
+*Why this focus, not Specificity/Clarity:* of the menu options, Fact Recall is the only one
+tied to a stated **MUST** (§1A: Key Facts "must be seamlessly included"), and it is the most
+objectively scorable and reference-groundable. Specificity is enforced upstream by the
+prompt (no invented names/dates/numbers); Clarity is partly captured by M3's density band.
 
 **M2 — Tone Alignment** (LLM-as-judge, dual; example-focus: *Tone Accuracy*).
 Two judges each rate, on a **strict 1–10 rubric**, how precisely the email's greeting, word
@@ -231,6 +258,11 @@ choice, pacing, and sign-off embody the requested tone (9–10 flawless; 6–7 m
 3–5 off register; 1–2 wrong tone). Each rating is normalized as `(score − 1) / 9`; the
 metric is the mean across both judges. The wide, anchored scale was chosen after a 1–5
 scale saturated at the ceiling (see §4).
+*Why this focus, not Format Adherence/Sentence Complexity:* Tone is a primary input (§1A)
+and the dimension most likely to separate two strong models, making it the most
+discriminating choice. Format Adherence is already covered deterministically by M3, and raw
+sentence-complexity counts measure readability proxies, not whether the requested register
+was actually hit.
 
 **M3 — Conciseness & Structure** (deterministic Python; example-focus: *Conciseness /
 Format Adherence*).
@@ -241,6 +273,11 @@ length — 1.0 inside the 50–150-word target band, decaying linearly to 0.0 at
 role (a short salutation line; a short valediction line ending in a comma), not a fixed
 phrase list, so valid-but-unlisted openings/closings are not penalized. No LLM is used, so
 this metric is fully reproducible and unit-tested (`tests/test_metrics.py`).
+*Why this focus, not Introduction Effectiveness/Grammar:* Conciseness and format are
+checkable deterministically with no judge, giving the suite a bias-free, exactly
+reproducible anchor — the design priority for M3. Introduction Effectiveness and
+Grammar/Fluency would require another subjective LLM judge, duplicating the bias surface
+M1/M2 already carry.
 
 ### 3.2 Why this design is defensible
 
@@ -265,8 +302,10 @@ definitions, generated emails, and per-judge breakdowns). Both models were run o
 **same 10 scenarios with the same prompt**; Gemini was run with `thinking_level="minimal"`
 so both rely solely on the prompt's CoT (parity with Claude, which uses no extended
 thinking). Edge-case scenarios (`contradictory-pricing`, `role-elimination`, and
-`final-interview-invite`, which supplies no date) stress no-fabrication discipline; the two
-scenarios that mirrored the prompt's own few-shot examples were excluded.
+`final-interview-invite`, which supplies no date) stress no-fabrication discipline; and the
+scenario set deliberately avoids the topics of the prompt's own few-shot examples (a demo
+follow-up and an outage notification), so no scenario rewards memorization of the in-prompt
+examples.
 
 ### 4.1 Per-scenario scores
 
@@ -313,17 +352,20 @@ scenarios that mirrored the prompt's own few-shot examples were excluded.
 
 ## 5. Model Comparison & Analysis
 
-**Which performed better?** **Claude Opus 4.8** (overall **0.972** vs **0.959**). Both
-models are tied and perfect on **Fact Coverage (1.000)** and **Conciseness & Structure
-(1.000)** — they reliably ground every key fact (including the contradictory/missing-info
-edge cases, with no fabrication) and produce well-formed emails. The entire difference
-comes from **Tone Alignment (0.917 vs 0.878)**.
+### 5.1 Which model/strategy performed better according to the 3 custom metrics?
 
-**Biggest failure mode of the lower performer (Gemini 3.5 Flash):** *flattening
-distinctive tones toward a generic professional register.* The per-scenario data isolates
-it cleanly — Gemini **ties Claude on every standard business register** (formal,
-transparent/professional, warm/professional, clear/direct, apologetic) but **trails on the
-most characterful tones**:
+**Claude Opus 4.8** (overall **0.972** vs **0.959**). Both models are tied and perfect on
+**Fact Coverage (1.000)** and **Conciseness & Structure (1.000)** — they reliably ground
+every key fact (including the contradictory/missing-info edge cases, with no fabrication)
+and produce well-formed emails. The entire difference comes from **Tone Alignment (0.917 vs
+0.878)**.
+
+### 5.2 What was the biggest failure mode of the lower-performing model?
+
+For **Gemini 3.5 Flash**: *flattening distinctive tones toward a generic professional
+register.* The per-scenario data isolates it cleanly — Gemini **ties Claude on every
+standard business register** (formal, transparent/professional, warm/professional,
+clear/direct, apologetic) but **trails on the most characterful tones**:
 
 | Requested tone | Claude | Gemini | Gap |
 |---|---|---|---|
@@ -337,20 +379,24 @@ but stiff professional voice (e.g. dropping contractions, formal phrasing) where
 calls for warmth and energy. Its competence is real but **narrower** — excellent at neutral
 business correspondence, weaker when the tone is the point.
 
-**Production recommendation.** For a **general-purpose** assistant — where the whole reason
-*Tone* is an input is to span casual, persuasive, empathetic, and urgent registers — I
-recommend **Claude Opus 4.8**: it leads exactly on the dimension that differentiates, with
-no cost on facts or structure. For a **cost-sensitive, formal-only** deployment (e.g.
-templated business/transactional mail), **Gemini 3.5 Flash** is a strong, cheaper choice —
-it showed *zero* measured loss on facts, structure, and standard professional tone. A
-sensible hybrid is to route by requested tone: Flash for standard registers, Opus when the
-brief demands a distinctive voice.
+### 5.3 Which model do you recommend for production, and why?
 
-**Limitations (read the result honestly).** This is a single run of n=10; LLM-as-judge
-scores are non-deterministic and the gap, while consistent in direction, is small and not
-tested for significance. Fact Coverage and Structure sit at the ceiling, so discrimination
-lives almost entirely in Tone — a strength for *this* comparison but a sign the suite would
-need harder fact/structure stressors to separate weaker models. Finally, a judge-
-calibration asymmetry was observed (Gemini-as-judge is lenient, often 10/10; Claude-as-
-judge is stricter) — the dual-provider averaging mitigates it, and because both models are
-scored by the *same* judge pair, the comparison remains fair.
+For a **general-purpose** assistant — where the whole reason *Tone* is an input is to span
+casual, persuasive, empathetic, and urgent registers — I recommend **Claude Opus 4.8**: it
+leads exactly on the dimension that differentiates (Tone Alignment 0.917 vs 0.878), with no
+cost on facts or structure (both 1.000). For a **cost-sensitive, formal-only** deployment
+(e.g. templated business/transactional mail), **Gemini 3.5 Flash** is a strong, cheaper
+choice — it showed *zero* measured loss on facts, structure, and standard professional
+tone. A sensible hybrid is to route by requested tone: Flash for standard registers, Opus
+when the brief demands a distinctive voice.
+
+### 5.4 Limitations (read the result honestly)
+
+This is a single run of n=10; LLM-as-judge scores are non-deterministic and the gap, while
+consistent in direction, is small and not tested for significance. Fact Coverage and
+Structure sit at the ceiling, so discrimination lives almost entirely in Tone — a strength
+for *this* comparison but a sign the suite would need harder fact/structure stressors to
+separate weaker models. Finally, a judge-calibration asymmetry was observed (Gemini-as-judge
+is lenient, often 10/10; Claude-as-judge is stricter) — the dual-provider averaging
+mitigates it, and because both models are scored by the *same* judge pair, the comparison
+remains fair.
